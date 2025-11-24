@@ -1,8 +1,13 @@
 import { LeaderboardResponse, ApiPlayer, Player } from "../types";
 
-// Get base URL from environment variable, with fallback for development
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL
+// Get base URL from environment variable
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!BASE_URL) {
+  throw new Error(
+    "VITE_API_BASE_URL is not defined. Please set it in your .env file."
+  );
+}
 
 /**
  * Maps API player data to component player format
