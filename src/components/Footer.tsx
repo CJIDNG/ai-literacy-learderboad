@@ -17,7 +17,7 @@ export function Footer() {
             className="h-[40px] w-auto"
           />
           <p className="text-[12px] text-[#848a90] text-center md:text-left">
-            © 2024. Odawa Audio, C-JiD. All Rights Reserved
+            © 2025. Dubawa Audio, CJID. All Rights Reserved
           </p>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4">
