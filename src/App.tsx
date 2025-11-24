@@ -1,28 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Hero } from "./components/Hero";
 import { LeaderboardTabs } from "./components/LeaderboardTabs";
 import { TopThreeCards } from "./components/TopThreeCards";
 import { SearchBar } from "./components/SearchBar";
 import { LeaderboardTable } from "./components/LeaderboardTable";
 import { Footer } from "./components/Footer";
-import { mockMonthlyData, mockAllTimeData } from "./data/mockData";
+import { getLeaderboardData } from "./services/api";
+import { Player, LeaderboardTab } from "./types";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"monthly" | "alltime">("monthly");
+  const [activeTab, setActiveTab] = useState<LeaderboardTab>("monthly");
   const [searchQuery, setSearchQuery] = useState("");
+  const [topThree, setTopThree] = useState<Player[]>([]);
+  const [remainingPlayers, setRemainingPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Get data based on active tab
-  const currentData = activeTab === "monthly" ? mockMonthlyData : mockAllTimeData;
+  // Fetch data when tab or search changes
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
 
-  // Filter data based on search query
-  const filteredData = currentData.filter(
-    (player) =>
-      player.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      player.phoneNumber.includes(searchQuery)
-  );
+      try {
+        const period = activeTab === "monthly" ? "monthly" : "all";
+        const { topThree: top, remainingPlayers: remaining } =
+          await getLeaderboardData({
+            period,
+            search: searchQuery || undefined,
+            limit: 50,
+          });
 
-  const topThree = filteredData.slice(0, 3);
-  const remainingPlayers = filteredData.slice(3);
+        setTopThree(top);
+        setRemainingPlayers(remaining);
+      } catch (err) {
+        console.error("Failed to fetch leaderboard:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load leaderboard data. Please try again later."
+        );
+        // Set empty arrays on error
+        setTopThree([]);
+        setRemainingPlayers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Debounce search to avoid too many API calls
+    const timeoutId = setTimeout(() => {
+      fetchData();
+    }, searchQuery ? 500 : 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [activeTab, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
@@ -33,18 +65,46 @@ export default function App() {
         {/* Leaderboard Section */}
         <LeaderboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-[#848a90] text-[14px]">Loading leaderboard...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="bg-red-50 border border-red-200 rounded-[16px] p-4 mb-8">
+            <p className="text-red-800 text-[14px]">{error}</p>
+          </div>
+        )}
+
         {/* Top 3 Players */}
-        <div className="mb-8">
-          <TopThreeCards players={topThree} />
-        </div>
+        {!loading && !error && topThree.length > 0 && (
+          <div className="mb-8">
+            <TopThreeCards players={topThree} />
+          </div>
+        )}
 
         {/* Search Bar */}
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
         {/* Leaderboard Table */}
-        <div className="mt-4">
-          <LeaderboardTable players={remainingPlayers} />
-        </div>
+        {!loading && !error && (
+          <div className="mt-4">
+            {remainingPlayers.length > 0 ? (
+              <LeaderboardTable players={remainingPlayers} />
+            ) : (
+              <div className="bg-white rounded-[16px] p-8 text-center">
+                <p className="text-[#848a90] text-[14px]">
+                  {searchQuery
+                    ? "No players found matching your search."
+                    : "No players in the leaderboard yet."}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Footer */}
         <Footer />

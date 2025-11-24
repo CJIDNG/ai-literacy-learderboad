@@ -1,6 +1,8 @@
+import { LeaderboardTab } from "../types";
+
 interface LeaderboardTabsProps {
-  activeTab: "monthly" | "alltime";
-  onTabChange: (tab: "monthly" | "alltime") => void;
+  activeTab: LeaderboardTab;
+  onTabChange: (tab: LeaderboardTab) => void;
 }
 
 export function LeaderboardTabs({ activeTab, onTabChange }: LeaderboardTabsProps) {
