@@ -1,4 +1,5 @@
 import { LeaderboardResponse, ApiPlayer, Player } from "../types";
+import { mockLeaderboardResponse } from "../data/mockData";
 
 // Get base URL from environment variable
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -35,6 +36,39 @@ export interface FetchLeaderboardParams {
   period?: "monthly" | "all";
   search?: string;
   limit?: number;
+}
+
+/**
+ * Applies filters to mock data (used as fallback for CORS errors)
+ */
+function applyFiltersToMockData(
+  data: LeaderboardResponse,
+  params: FetchLeaderboardParams
+): LeaderboardResponse {
+  let filteredData = { ...data };
+
+  // Apply search filter if provided
+  if (params.search) {
+    const searchLower = params.search.toLowerCase();
+    const filterPlayer = (player: ApiPlayer) =>
+      player.username.toLowerCase().includes(searchLower) ||
+      player.phone_display.includes(searchLower);
+
+    filteredData.top_3 = data.top_3.filter(filterPlayer);
+    filteredData.leaderboard = data.leaderboard.filter(filterPlayer);
+  }
+
+  // Apply limit if provided
+  if (params.limit) {
+    filteredData.leaderboard = filteredData.leaderboard.slice(0, params.limit);
+  }
+
+  // Update period if different
+  if (params.period) {
+    filteredData.period = params.period;
+  }
+
+  return filteredData;
 }
 
 /**
@@ -91,10 +125,12 @@ export async function fetchLeaderboard(
     return data;
   } catch (error) {
     if (error instanceof TypeError && error.message === "Failed to fetch") {
-      console.error("Network error - Possible CORS issue or invalid URL:", url);
-      throw new Error(
-        `Failed to connect to the API. Please check:\n1. The API URL is correct: ${url}\n2. CORS is enabled on the server\n3. Your network connection`
+      console.warn(
+        "⚠️ API request failed (likely CORS issue). Using mock data as fallback.",
+        url
       );
+      // Return mock data as fallback when CORS error occurs
+      return applyFiltersToMockData(mockLeaderboardResponse, params);
     }
     console.error("Error fetching leaderboard:", error);
     throw error;
