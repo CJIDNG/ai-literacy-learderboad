@@ -15,14 +15,12 @@ export function Hero() {
                 Test your ability to tell a real image from a photoshoped or AI Generated Image.
               </p>
             </div>
-            <button className="bg-white box-border content-stretch flex gap-[10px] items-center justify-center not-italic px-[16px] py-[8px] relative rounded-[8px] shrink-0 hover:bg-gray-50 transition-colors">
-              <p className="font-['Font_Awesome_6_Brands:Regular',sans-serif] leading-[1.35] relative shrink-0 text-[#5a74d2] text-[20px]">
-                Whatsapp
-              </p>
+            <a href="https://wa.me/2349015227915" target="_blank" className="bg-white box-border content-stretch flex gap-[10px] items-center justify-center not-italic px-[16px] py-[8px] relative rounded-[8px] shrink-0 hover:bg-gray-50 transition-colors">
+
               <p className="font-['Inter:Medium',sans-serif] font-medium leading-[normal] relative shrink-0 text-[#6365ef] text-[14px] tracking-[-0.21px]">
                 Play Game on Whatsapp
               </p>
-            </button>
+            </a>
           </div>
           {/* Mobile Trophy */}
           <div className="h-full relative shrink-0 w-[274px] md:hidden">

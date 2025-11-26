@@ -22,19 +22,47 @@ export function Footer() {
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="flex gap-3 items-center">
-            <a href="#" className="text-[#111111] hover:text-[#6365ef] transition-colors">
+            <a
+              href="https://www.facebook.com/thecjid"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#111111] hover:text-[#6365ef] transition-colors"
+              aria-label="Visit CJID on Facebook"
+            >
               <Facebook className="w-5 h-5" />
             </a>
-            <a href="#" className="text-[#111111] hover:text-[#6365ef] transition-colors">
+            <a
+              href="https://www.linkedin.com/company/thecjid"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#111111] hover:text-[#6365ef] transition-colors"
+              aria-label="Visit CJID on LinkedIn"
+            >
               <Linkedin className="w-5 h-5" />
             </a>
-            <a href="#" className="text-[#111111] hover:text-[#6365ef] transition-colors">
+            <a
+              href="https://twitter.com/thecjid"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#111111] hover:text-[#6365ef] transition-colors"
+              aria-label="Visit CJID on Twitter"
+            >
               <Twitter className="w-5 h-5" />
             </a>
-            <a href="#" className="text-[#111111] hover:text-[#6365ef] transition-colors">
+            <a
+              href="https://www.instagram.com/thecjid"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#111111] hover:text-[#6365ef] transition-colors"
+              aria-label="Visit CJID on Instagram"
+            >
               <Instagram className="w-5 h-5" />
             </a>
-            <a href="#" className="text-[#111111] hover:text-[#6365ef] transition-colors">
+            <a
+              href="#"
+              className="text-[#111111] hover:text-[#6365ef] transition-colors"
+              aria-label="Visit CJID on YouTube"
+            >
               <Youtube className="w-5 h-5" />
             </a>
           </div>
