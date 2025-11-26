@@ -58,6 +58,10 @@ function applyFiltersToMockData(
     filteredData.leaderboard = data.leaderboard.filter(filterPlayer);
   }
 
+  // Sort both top_3 and leaderboard by rank in ascending order
+  filteredData.top_3.sort((a, b) => a.rank - b.rank);
+  filteredData.leaderboard.sort((a, b) => a.rank - b.rank);
+
   // Apply limit if provided
   if (params.limit) {
     filteredData.leaderboard = filteredData.leaderboard.slice(0, params.limit);
@@ -122,6 +126,10 @@ export async function fetchLeaderboard(
       throw new Error("API returned an error status");
     }
 
+    // Sort both top_3 and leaderboard by rank in ascending order
+    data.top_3.sort((a, b) => a.rank - b.rank);
+    data.leaderboard.sort((a, b) => a.rank - b.rank);
+
     return data;
   } catch (error) {
     if (error instanceof TypeError && error.message === "Failed to fetch") {
@@ -156,6 +164,9 @@ export async function getLeaderboardData(
   const remainingLeaderboard = response.leaderboard.filter(
     (player) => !topThreeRanks.has(player.rank)
   );
+
+  // Sort remaining players by rank in ascending order
+  remainingLeaderboard.sort((a, b) => a.rank - b.rank);
 
   const remainingPlayers = remainingLeaderboard.map(mapApiPlayerToPlayer);
 
