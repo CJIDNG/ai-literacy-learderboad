@@ -68,8 +68,11 @@ export async function fetchLeaderboard(
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        Accept: "application/json",
       },
+      referrerPolicy: "no-referrer",
+      mode: "cors",
+      credentials: "omit",
     });
 
     if (!response.ok) {
