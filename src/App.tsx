@@ -28,7 +28,7 @@ export default function App() {
           await getLeaderboardData({
             period,
             search: searchQuery || undefined,
-            limit: 50,
+            // limit: 50,
           });
 
         setTopThree(top);
