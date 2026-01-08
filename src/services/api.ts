@@ -81,11 +81,11 @@ function applyFiltersToMockData(
 export async function fetchLeaderboard(
   params: FetchLeaderboardParams = {}
 ): Promise<LeaderboardResponse> {
-  const { period = "all", search, limit = 50 } = params;
+  const { period = "all", search, limit } = params;
 
   const queryParams = new URLSearchParams({
     period: period === "monthly" ? "monthly" : "all",
-    limit: limit.toString(),
+    limit: limit ? limit.toString() : "",
   });
 
   if (search) {
